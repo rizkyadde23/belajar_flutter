@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "StateFull Wdget",
+      title: "StateFull Widget",
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
     );
@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Stateful Widget')),
+      appBar: AppBar(title: Text('Increment App')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
