@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'future_builder.dart';
 
 class LocalStoragePage extends StatefulWidget{
   const LocalStoragePage({super.key});
@@ -88,10 +89,12 @@ Widget build(BuildContext context){
         ],
       ),
       const SizedBox(height: 12,),
-      Text("Data Tersimpan", style: TextStyle(fontSize:16),),
-      const SizedBox(height: 12,),
-      Text('Nama : ${savedNama ?? "-"}'),
-      Text('NIM : ${savedNim ?? "-"}'),
+      ElevatedButton(onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => FutureBuilderPage(
+          nama : savedNama,
+          nim: savedNim,
+        )));
+      }, child: Text("Next Page"))
     ],
     ),
     ),
