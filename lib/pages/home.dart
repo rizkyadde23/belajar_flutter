@@ -1,3 +1,4 @@
+import 'package:belajar/pages/detail.dart';
 import 'package:flutter/material.dart';
 
 class Mahasiswa {
@@ -56,10 +57,10 @@ class _DynamicMahasiswaListState extends State<DynamicMahasiswaList>{
             ),
             const SizedBox(height: 12,),
             ElevatedButton(
-            onPressed: tambahData,
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent), 
-            child: Text("Tambah") 
-            ),
+                onPressed: tambahData,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent), 
+                child: Text("Tambah") 
+                ),
             Expanded(
               child: ListView.builder(
                 itemCount: daftarMahasiswa.length,
@@ -72,7 +73,11 @@ class _DynamicMahasiswaListState extends State<DynamicMahasiswaList>{
                     title: Text('NAMA : ${mahasiswa.nama}'),
                     subtitle: Text('NIM : ${mahasiswa.nim}'),
                     trailing: IconButton(onPressed: () => hapusData(index), icon: Icon(Icons.delete)),
-                  ),
+                    onTap: ()=>Navigator.push(context, 
+                    MaterialPageRoute(builder: (context)=> DetailPage(mahasiswa: daftarMahasiswa[index])
+                )
+                ), 
+                ),
                 );
               }
               ),
