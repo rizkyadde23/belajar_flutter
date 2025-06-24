@@ -1,104 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'future_builder.dart';
 
-class LocalStoragePage extends StatefulWidget{
-  const LocalStoragePage({super.key});
+class HomePage extends StatelessWidget{
+  HomePage({super.key});
+  final List<Map<String,String>> daftarMahasiswa = [
+    {'nama': 'Rizky', 'nim': '123240150'},
+    {'nama': 'Zaka', 'nim': '123240157'},
+    {'nama': 'Ardi', 'nim': '123240149'},
+  ];
+
 
   @override
-  State<LocalStoragePage> createState() => _LocalStoragePageState();
-}
-
-class _LocalStoragePageState extends State<LocalStoragePage>{
-final TextEditingController namaController = TextEditingController();
-final TextEditingController nimController = TextEditingController();
-
-String? savedNama;
-String? savedNim;
-
-@override
-void initState(){
-  super.initState();
-  loadData();
-}
-
-Future<void> loadData() async {
-  final prefs = await SharedPreferences.getInstance();
-  setState(() {
-    savedNama = prefs.getString('nama');
-    savedNim = prefs.getString('nim');
-  });
-}
-
-Future<void> simpanData() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('nama', namaController.text);
-  await prefs.setString('nim', nimController.text);
-  loadData();
-}
-
-Future<void> hapusData() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('nama');
-  await prefs.remove('nim');
-  setState(() {
-    savedNama = null;
-    savedNim = null;
-  });
-}
-
-@override
-void dispose() {
-  namaController.dispose();
-  nimController.dispose();
-  super.dispose();
-}
-
-@override
-Widget build(BuildContext context){
-  return Scaffold(
-    appBar: AppBar(title: Text("Shared Preference"),
-    ),
-    body: Padding(padding: EdgeInsets.all(16),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      TextField(
-        controller: namaController,
-        decoration: InputDecoration(
-          labelText: "Masukkan Nama"
-        ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Listview Builder"),),
+      body: Padding(padding: EdgeInsets.all(16),
+      child:
+        ListView.builder(
+          itemCount: daftarMahasiswa.length,
+          itemBuilder: (context, index){
+          final mahasiswa = daftarMahasiswa[index];
+          return Card(
+            margin: EdgeInsets.all(8),
+            child: ListTile(
+              leading: Icon(Icons.person),
+              title: Text('NAMA : ${mahasiswa['nama']}'),
+              subtitle: Text('NIM : ${mahasiswa['nim']}'),
+            ),
+          );
+        }
+        )
       ),
-      const SizedBox(height: 12,),
-      TextField(
-        controller: nimController,
-        decoration: InputDecoration(
-          labelText: "Masukkan NIM"
-        ),
-      ),
-      const SizedBox(height: 12,),
-      Row(
-        children: [
-          ElevatedButton(onPressed: simpanData,
-           style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent),
-           child: Text("Simpan")),
-          ElevatedButton(onPressed: hapusData, 
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-          child:Text("Hapus"),
-          )
-        ],
-      ),
-      const SizedBox(height: 12,),
-      ElevatedButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => FutureBuilderPage(
-          nama : savedNama,
-          nim: savedNim,
-        )));
-      }, child: Text("Next Page"))
-    ],
-    ),
-    ),
-  );
-}
-
+      );
+  }
 }
