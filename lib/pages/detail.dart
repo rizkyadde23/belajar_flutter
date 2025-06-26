@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'dynamic_list.dart';
 
 class DetailPage extends StatelessWidget {
   final Mahasiswa mahasiswa;
