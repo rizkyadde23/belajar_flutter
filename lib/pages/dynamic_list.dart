@@ -38,7 +38,6 @@ class _DynamicMahasiswaListState extends State<DynamicMahasiswaList>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("List Page"),),
       body: Padding(padding: EdgeInsets.all(16),
       child: Column(
         children: [

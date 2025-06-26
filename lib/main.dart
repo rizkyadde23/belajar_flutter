@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "StateFull Widget",
       debugShowCheckedModeBanner: false,
-      home: BottomNav(),
+      home: TabBarApp(),
     );
   }
 }
