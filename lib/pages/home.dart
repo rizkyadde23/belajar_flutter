@@ -1,66 +1,109 @@
+import 'package:belajar/pages/detail.dart';
 import 'package:flutter/material.dart';
 
-class ValidationPage extends StatefulWidget{
-  const ValidationPage ({super.key});
-  @override
-  _ValidationPageState createState() => _ValidationPageState();
+class Mahasiswa {
+  final String nama;
+  final String nim;
+  Mahasiswa({required this.nama,required this.nim});  
 }
 
-class _ValidationPageState extends State<ValidationPage>{
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+class DynamicMahasiswaList extends StatefulWidget{
+  const DynamicMahasiswaList({super.key});
+
+  @override
+  State<DynamicMahasiswaList> createState() => _DynamicMahasiswaListState();
+}
+
+class _DynamicMahasiswaListState extends State<DynamicMahasiswaList>{
+  List<Mahasiswa> daftarMahasiswa = [];
   final TextEditingController namaController = TextEditingController();
   final TextEditingController nimController = TextEditingController();
 
-  void _submitForm(){
-    if (formKey.currentState!.validate()) {
-      final nama = namaController.text;
-      final nim = nimController.text;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data Valid: $nama ($nim)')
-      )
-      );
-    }
+  void tambahData(){
+  if (namaController.text.isNotEmpty && nimController.text.isNotEmpty) {
+    setState(() {
+      daftarMahasiswa.add(Mahasiswa(nama: namaController.text, nim: nimController.text));
+    });
+    namaController.clear();
+    nimController.clear();
+  }    
+  }
+
+  void hapusData(int index){
+    setState(() {
+      daftarMahasiswa.removeAt(index);
+    });
+  }
+
+  void showDialogHapus(int index){
+    showDialog(context: context, 
+    builder: (context) => AlertDialog(
+      title: Text("Konfirmasi"),
+      content: Text("Apakah Kamu Yakin Ingin Menghapus Data"),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: Text("Batal")
+        ),
+        TextButton(onPressed: (){
+          hapusData(index);
+          Navigator.pop(context);
+        }, 
+        child: Text("Hapus"))
+      ],
+    ) 
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Form"),),
+      appBar: AppBar(title: Text("List Mahasiswa"),),
       body: Padding(padding: EdgeInsets.all(16),
-      child: Form(
-        key: formKey,
-        child: Column(
+      child: Column(
         children: [
-          TextFormField(
-            controller: namaController,
-            decoration: InputDecoration(labelText: "Masukkan Nama"),
-            validator: (value){
-              if (value==null || value.isEmpty) {
-                return "Nama Tidak Boleh Kosong";
-              }
-              return null;
-            },
-            ),
-            TextFormField(
-              controller: nimController,
-              decoration: InputDecoration(labelText: "Masukkan Nim"),
-              keyboardType: TextInputType.number,
-              validator: (value){
-                if(value==null || value.isEmpty){
-                  return "NIM Tidak Boleh Kosong";
-                }
-                if (!RegExp(r'^\d+$').hasMatch(value)) {
-                  return "NIM Harus Berupa Angka";
-                }
-                return null;
-              },
+            TextField(
+              controller: namaController,
+              decoration: InputDecoration(
+                labelText: "Masukkan Nama"
+              ),
             ),
             const SizedBox(height: 12,),
-            ElevatedButton(onPressed: _submitForm, child: Text("Simpan")),
+            TextField(
+              controller: nimController,
+              decoration: InputDecoration(
+                labelText: "Masukkan Nim"
+              ),
+            ),
+            const SizedBox(height: 12,),
+            ElevatedButton(
+                onPressed: tambahData,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent), 
+                child: Text("Tambah") 
+                ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: daftarMahasiswa.length,
+                itemBuilder: (context, index){
+                final mahasiswa = daftarMahasiswa[index];
+                return Card(
+                  margin: EdgeInsets.all(8),
+                  child: ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('NAMA : ${mahasiswa.nama}'),
+                    subtitle: Text('NIM : ${mahasiswa.nim}'),
+                    trailing: IconButton(onPressed: () => showDialogHapus(index), icon: Icon(Icons.delete)),
+                    onTap: ()=>Navigator.push(context, 
+                    MaterialPageRoute(builder: (context)=> DetailPage(mahasiswa: daftarMahasiswa[index])
+                )
+                ), 
+                ),
+                );
+              }
+              ),
+            ),
+
         ],
       )
       ),
-      ),
-    );
+      );
   }
-
 }
