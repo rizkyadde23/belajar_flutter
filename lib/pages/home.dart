@@ -1,109 +1,88 @@
-import 'package:belajar/pages/detail.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class Mahasiswa {
-  final String nama;
-  final String nim;
-  Mahasiswa({required this.nama,required this.nim});  
-}
-
-class DynamicMahasiswaList extends StatefulWidget{
-  const DynamicMahasiswaList({super.key});
+class HomePage extends StatefulWidget{
+  const HomePage({super.key});
 
   @override
-  State<DynamicMahasiswaList> createState() => _DynamicMahasiswaListState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _DynamicMahasiswaListState extends State<DynamicMahasiswaList>{
-  List<Mahasiswa> daftarMahasiswa = [];
-  final TextEditingController namaController = TextEditingController();
-  final TextEditingController nimController = TextEditingController();
+class _HomePageState extends State<HomePage>{
+  late Future<List<dynamic>> futureUsers;
 
-  void tambahData(){
-  if (namaController.text.isNotEmpty && nimController.text.isNotEmpty) {
+Future<List<dynamic>> fetchUsers() async {
+    //FETCHING
+    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'),   
+    //FIX BUG GAK MAU FETCHING   
+    headers: { 
+      'User-Agent': 'Mozilla/5.0', 
+      'Accept': 'application/json',
+    },
+);
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception("Gagal Memuat Data");
+    }
+}
+
+
+   
+   @override
+   void initState(){
+    super.initState();
+    futureUsers = fetchUsers();
+   }
+   void _refresh(){
     setState(() {
-      daftarMahasiswa.add(Mahasiswa(nama: namaController.text, nim: nimController.text));
+      futureUsers = fetchUsers();
     });
-    namaController.clear();
-    nimController.clear();
-  }    
-  }
-
-  void hapusData(int index){
-    setState(() {
-      daftarMahasiswa.removeAt(index);
-    });
-  }
-
-  void showDialogHapus(int index){
-    showDialog(context: context, 
-    builder: (context) => AlertDialog(
-      title: Text("Konfirmasi"),
-      content: Text("Apakah Kamu Yakin Ingin Menghapus Data"),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text("Batal")
-        ),
-        TextButton(onPressed: (){
-          hapusData(index);
-          Navigator.pop(context);
-        }, 
-        child: Text("Hapus"))
-      ],
-    ) 
-    );
-  }
-
+   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("List Mahasiswa"),),
+      appBar: AppBar(title: Text("API"),
+      actions: [
+        IconButton(
+          onPressed: _refresh,
+          icon: const Icon(
+          Icons.refresh),
+          tooltip: "Refresh Data",
+          ),
+      ],),
       body: Padding(padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-            TextField(
-              controller: namaController,
-              decoration: InputDecoration(
-                labelText: "Masukkan Nama"
-              ),
+      child: FutureBuilder(
+        future: fetchUsers(), 
+        builder: (context, snapshot){
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(),);
+        } else if (snapshot.hasError){
+          return 
+              Center(child: Text('Error : ${snapshot.error}'),);
+        } else if (snapshot.hasData){
+          final users = snapshot.data!;
+          return Expanded(
+            child: ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context,index){
+                final user = users[index];
+                return ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text(user["name"]),
+                  subtitle: Text(user["email"]),
+                  );
+                }
             ),
-            const SizedBox(height: 12,),
-            TextField(
-              controller: nimController,
-              decoration: InputDecoration(
-                labelText: "Masukkan Nim"
-              ),
-            ),
-            const SizedBox(height: 12,),
-            ElevatedButton(
-                onPressed: tambahData,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent), 
-                child: Text("Tambah") 
-                ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: daftarMahasiswa.length,
-                itemBuilder: (context, index){
-                final mahasiswa = daftarMahasiswa[index];
-                return Card(
-                  margin: EdgeInsets.all(8),
-                  child: ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text('NAMA : ${mahasiswa.nama}'),
-                    subtitle: Text('NIM : ${mahasiswa.nim}'),
-                    trailing: IconButton(onPressed: () => showDialogHapus(index), icon: Icon(Icons.delete)),
-                    onTap: ()=>Navigator.push(context, 
-                    MaterialPageRoute(builder: (context)=> DetailPage(mahasiswa: daftarMahasiswa[index])
-                )
-                ), 
-                ),
-                );
-              }
-              ),
-            ),
-
-        ],
-      )
+          );
+          } else {
+            return Center(child: Text("Tidak Ada Data"),);
+          }
+      }
       ),
-      );
+      ),
+    );
   }
 }
