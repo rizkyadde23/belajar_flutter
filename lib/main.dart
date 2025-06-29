@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'pages/home.dart';
+import 'pages/counter.dart';
+import 'pages/counterpage.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_)=>Counter(),
+      child: MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "StateFull Widget",
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: CounterPage(),
     );
   }
 }
