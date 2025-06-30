@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'pages/future_provider.dart';
+import 'pages/stream_provider.dart';
 
-final namaProvider = FutureProvider<String>((ref) async {
-  await Future.delayed(Duration(seconds: 2));
-  return "Kakakakka";
-});
-
+final timeProvider = StreamProvider<int>((ref){
+  return Stream.periodic(Duration(seconds: 1),(count) => count);
+})
+;
 void main() {
   runApp(
     ProviderScope(child: MyApp())
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "StateFull Widget",
       debugShowCheckedModeBanner: false,
-      home: FutureProviderPage(),
+      home: StreamProviderPage(),
     );
   }
 }
