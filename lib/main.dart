@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'pages/counterpage.dart';
-import 'pages/counter.dart';
+import 'pages/future_provider.dart';
 
-final counterProvider = StateNotifierProvider<Counter, int>((ref)=>Counter());
+final namaProvider = FutureProvider<String>((ref) async {
+  await Future.delayed(Duration(seconds: 2));
+  return "Kakakakka";
+});
 
 void main() {
   runApp(
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "StateFull Widget",
       debugShowCheckedModeBanner: false,
-      home: CounterPage(),
+      home: FutureProviderPage(),
     );
   }
 }
