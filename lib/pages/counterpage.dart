@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'counter.dart';
+import '../main.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CounterPage extends StatelessWidget{
+class CounterPage extends ConsumerWidget{
+  const CounterPage ({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final counter = context.watch<Counter>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final counter = ref.watch(counterProvider);
     return Scaffold(
       appBar: AppBar(title: Text("Provider"),),
       body: Center(
         child: Column(
           children: [
-            Text("Angka Sekarang : "),
-            Text("${counter.nilai}"),
+            Text("Angka Sekarang :"),
+            Text('$counter'),
             SizedBox(height: 12,),
-            ElevatedButton(onPressed: () => context.read<Counter>().reset(), child: Text("Reset")),
+            ElevatedButton(onPressed: () => ref.read(counterProvider.notifier).reset(), child: Text("Reset")),
             SizedBox(height: 12,),
-            ElevatedButton(onPressed: () => context.read<Counter>().tambah(), child: Text("Tambah")),
+            ElevatedButton(onPressed: () => ref.read(counterProvider.notifier).tambah(), child: Text("Tambah")),
             SizedBox(height: 12,),
-            ElevatedButton(onPressed: () => context.read<Counter>().kurang(), child: Text("Kurang"))
+            ElevatedButton(onPressed: () => ref.read(counterProvider.notifier).kurang(), child: Text("Kurang"))
           ],
         ),
       ),

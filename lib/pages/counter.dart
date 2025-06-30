@@ -1,20 +1,8 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Counter with ChangeNotifier{
-  int nilai = 0;
-  
-  void tambah(){
-    nilai++;
-    notifyListeners();
-  }
-
-  void kurang(){
-    nilai--;
-    notifyListeners();
-  }
-
-  void reset(){
-    nilai = 0;
-    notifyListeners();
-  }
+class Counter extends StateNotifier<int>{
+  Counter() : super(0);
+  void tambah() => state++;
+  void kurang() => state--;
+  void reset() => state = 0;
 }

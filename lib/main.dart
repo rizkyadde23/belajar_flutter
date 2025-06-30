@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'pages/counter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'pages/counterpage.dart';
-import 'package:provider/provider.dart';
+import 'pages/counter.dart';
+
+final counterProvider = StateNotifierProvider<Counter, int>((ref)=>Counter());
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_)=>Counter(),
-      child: MyApp(),
-    )
+    ProviderScope(child: MyApp())
   );
 }
 
