@@ -1,24 +1,15 @@
+import 'package:belajar/pages/home.dart';
+import 'package:belajar/pages/home_binding.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'pages/stream_provider.dart';
+import 'package:get/get.dart';
 
-final timeProvider = StreamProvider<int>((ref){
-  return Stream.periodic(Duration(seconds: 1),(count) => count);
-})
-;
+
 void main() {
   runApp(
-    ProviderScope(child: MyApp())
-  );
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "StateFull Widget",
+    GetMaterialApp(
+      initialBinding: HomeBinding(),
       debugShowCheckedModeBanner: false,
-      home: StreamProviderPage(),
-    );
-  }
+      home: HomePage(),
+    )
+  );
 }
