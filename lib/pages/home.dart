@@ -1,42 +1,46 @@
-import 'package:belajar/pages/app_routes.dart';
-import 'package:belajar/pages/user_controller.dart';
+import 'package:belajar/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HomePage extends StatelessWidget{
   HomePage ({super.key});
-  final dataController = Get.find<UserController>();
+  final box = GetStorage();
+
+  void logout(){
+    box.write('isLoggedIn', false);
+    Get.offAll(LoginPage());
+    Get.snackbar("Berhasil", 'Logout Berhasil');
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Navigation+GetStorage"),),
-      body: Padding(padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-          TextField(
-            controller: dataController.namaController,
-            decoration: InputDecoration(labelText: "NAMA"),
-          ),
-          const SizedBox(height: 12,),
-          TextField(
-            controller: dataController.nimController,
-            decoration: InputDecoration(labelText: "NIM"),
-          ),
-          const SizedBox(height: 12,),
-          ElevatedButton(
-          onPressed: dataController.simpan, 
-          child: Text("Simpan")),
-          const SizedBox(height: 12,),
-          ElevatedButton(
-          onPressed: dataController.reset, 
-          child: Text("Reset")),
-          const SizedBox(height: 12,),
-          ElevatedButton(
-          onPressed: (){Get.toNamed(AppRoutes.detail);}, 
-          child: Text("Detail")),
-        ],
+      appBar: AppBar(
+        title: Text("Home"),
+        actions: [
+          IconButton(
+            onPressed: (){
+              Get.defaultDialog(
+                title: "Konfirmasi",
+                middleText: "Yakin Ingin Keluar?",
+                textConfirm: "Ya",
+                textCancel: "Tidak",
+                confirmTextColor: Colors.white,
+                onConfirm: (){
+                  logout();
+                },
+                onCancel: Get.back,
+                barrierDismissible: false,
+              );
+            },
+            icon: Icon(Icons.logout),
+        ),
+        ]
+        ),
+        body: Center(
+        child: Text("Selamat Datang Di Home Page"),
       ),
-      ),
-    );
+    );    
   }
 }
