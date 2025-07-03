@@ -1,8 +1,10 @@
-import 'package:belajar/pages/home.dart';
+import 'package:belajar/pages/app_routes.dart';
 import 'package:belajar/pages/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'pages/app_pages.dart';
+
 
 void main() async {
   await GetStorage.init();
@@ -10,7 +12,8 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      initialRoute: AppRoutes.home,
+      getPages: AppPages.routes,
     )
   );
 }

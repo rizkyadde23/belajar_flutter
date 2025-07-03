@@ -1,4 +1,4 @@
-import 'package:belajar/pages/detail.dart';
+import 'package:belajar/pages/app_routes.dart';
 import 'package:belajar/pages/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget{
           child: Text("Reset")),
           const SizedBox(height: 12,),
           ElevatedButton(
-          onPressed: (){Get.to(()=>DetailPage());}, 
+          onPressed: (){Get.toNamed(AppRoutes.detail);}, 
           child: Text("Detail")),
         ],
       ),
