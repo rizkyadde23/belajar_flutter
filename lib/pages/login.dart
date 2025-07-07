@@ -1,8 +1,7 @@
 import 'package:belajar/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-
+import 'package:hive/hive.dart';
 class LoginPage extends StatefulWidget{
   const LoginPage ({super.key});
   @override
@@ -13,16 +12,15 @@ class _LoginPageState extends State<LoginPage>{
   final _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final box = GetStorage();
+  final Box loginBox = Hive.box('loginBox');
 
     void _submitForm(){
-
     if (_formKey.currentState!.validate()) {
     final username = usernameController.text;
     final password = passwordController.text;
       if (username == 'admin' && password=='admin123') {
       Get.snackbar("Berhasil", "Login Berhasil");
-      box.write('isLoggedin', true);
+      loginBox.put('isLoggedin', true);
       Get.offAll(HomePage());
       } else {
         usernameController.clear();
