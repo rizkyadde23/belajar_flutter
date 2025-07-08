@@ -13,8 +13,11 @@ class _HomePageState extends State<HomePage>{
   final Box mhsBox = Hive.box('mahasiswaBox');
   final Box loginBox = Hive.box('loginBox');
   final formKey = GlobalKey<FormState>();
+  final formKeyEdit = GlobalKey<FormState>();
   final TextEditingController namaController = TextEditingController();
   final TextEditingController nimController = TextEditingController();
+  final TextEditingController namaControllerEdit = TextEditingController();
+  final TextEditingController nimControllerEdit = TextEditingController();
 
   void simpanData() {
     final nama = namaController.text.trim();
@@ -106,6 +109,47 @@ class _HomePageState extends State<HomePage>{
                     child: ListTile(
                       title: Text('${item['nama']}'),
                       subtitle: Text('${item['nim']}'),
+                      onTap: (){
+                        namaControllerEdit.text = item['nama'];
+                        nimControllerEdit.text = item['nim'];
+                        Get.defaultDialog(
+                          title: "Edit Data",
+                          content: 
+                          Form(
+                          key: formKeyEdit,
+                          child: Column(
+                            children: [
+                            TextFormField(
+                              controller: namaControllerEdit,
+                              decoration: InputDecoration(labelText: "Masukkan Nama"),
+                              validator: (value) => value!.isEmpty ? "Empty" : null,
+                            ),
+                            const SizedBox(height: 12,),
+                            TextFormField(
+                              controller: nimControllerEdit,
+                              decoration: InputDecoration(labelText: "Masukkan Nim"),
+                              validator: (value) => value!.isEmpty ? "Empty" : null,
+                            ),
+                          ],
+                          ),
+                        ),
+                        textConfirm: "Ubah",
+                        textCancel: "Batal",
+                        onConfirm: (){
+                           final nama = namaControllerEdit.text.trim();
+                           final nim = nimControllerEdit.text.trim();
+                           if (nama.isNotEmpty && nim.isNotEmpty) {
+                            mhsBox.putAt(index, {'nama': nama, 'nim': nim});
+                            namaController.clear();
+                            nimController.clear();
+                            Get.back();
+                            setState(() {});
+                            Get.snackbar("Berhasil", "Data Berhasil Diedit");
+                          }
+                        },
+                        onCancel: Get.back,
+                        );
+                      },
                       leading: Icon(Icons.person),
                       trailing: IconButton(
                         onPressed: (){
