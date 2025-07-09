@@ -5,18 +5,18 @@ class User {
   final String avatar;
 
   User({
+    required this.avatar,
     required this.id,
     required this.name,
     required this.email,
-    required this.avatar,
   });
 
   factory User.fromJson(Map<String, dynamic>json){
     return User(
       id: json['id'], 
       name: "${json['first_name']} ${json['last_name']}", 
-      email: json['email'], 
-      avatar: json['avatar']
+      email: json['email'],
+      avatar: json['avatar'],
       );
   }
 }

@@ -25,4 +25,26 @@ class UserController extends GetxController{
     isLoading(false);
   }
 
+  void addUsers(String name, String email) async {
+    final url = Uri.parse('https://reqres.in/api/users');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_API_KEY', //BUTUH API KEY
+        },
+        body: jsonEncode({'name': name, 'email': email}), // ENCODE JSON
+        );
+      if (response.statusCode == 201) {
+        final data = json.decode(response.body);
+        Get.snackbar("Berhasil", "Data ${data['nama']} Berhasil Ditambahkan");
+      } else {
+        Get.snackbar("Gagal", "Data Gagal Ditambahkan");
+      }
+    } catch (e) {
+      Get.snackbar("Gagal", e.toString());
+    }
+}
+
 }
