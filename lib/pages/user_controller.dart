@@ -66,4 +66,20 @@ Future<void> updateUsers(int id,String name, String email) async {
   }
 }
 
+Future<void> deleteUser(int id) async {
+  final url = Uri.parse('https://reqres.in/api/users/$id');
+  try {
+    final response = await http.delete(url);
+    if (response.statusCode == 204) {
+      users.removeWhere((user) => user.id == id);
+      Get.snackbar("Berhasil", "User berhasil dihapus");
+    } else {
+      Get.snackbar("Gagal", "Gagal menghapus user (${response.statusCode})");
+    }
+  } catch (e) {
+    Get.snackbar("Error", e.toString());
+  }
+}
+
+
 }

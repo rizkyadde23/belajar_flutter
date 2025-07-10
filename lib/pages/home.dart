@@ -53,6 +53,22 @@ class HomePage extends StatelessWidget {
                       leading: CircleAvatar(backgroundImage: NetworkImage(user.avatar)),
                       title: Text(user.name),
                       subtitle: Text(user.email),
+                      trailing: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                          Get.defaultDialog(
+                              title: "Hapus User",
+                              middleText: "Yakin ingin menghapus user ini?",
+                              textConfirm: "Ya",
+                              textCancel: "Batal",
+                              confirmTextColor: Colors.white,
+                              onConfirm: () {
+                                controller.deleteUser(user.id);
+                                Get.back();
+                              },
+                            );
+                          },
+                        ),
                       onTap: () {
                           Get.defaultDialog(
                           title: "Edit User",
