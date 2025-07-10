@@ -16,11 +16,7 @@ class UserController extends GetxController{
 
   void fetchUsers() async {
     isLoading(true);
-    final response = await http.get(Uri.parse('https://reqres.in/api/users?page=1'),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-    );
+    final response = await http.get(Uri.parse('https://reqres.in/api/users?page=1'));
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
       users.value = data.map((e)=> User.fromJson(e)).toList();
@@ -35,6 +31,10 @@ class UserController extends GetxController{
     try {
       final response = await http.post(
         url,
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_API_KEY', //BUTUH API KEY
+        },
         body: jsonEncode({'name': name, 'email': email}), // ENCODE JSON
         );
       if (response.statusCode == 201) {
